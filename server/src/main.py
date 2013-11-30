@@ -2,18 +2,17 @@ import web
 import time
 
 urls = (
-    '/path', 'path',
-    '/report', 'report'
+    '/path%(.*)', 'path',
+    '/report(.*)', 'report'
     )
 
 class path:
-  def GET(self):
-    time.sleep(10)
-    return "path"
+  def GET(self, release_id):
+    return release_id
 
 class report:
-  def GET(self):
-    return "report"
+  def GET(self, release_id):
+    return release_id
 
 if __name__ == "__main__":
   app = web.application(urls,globals())
