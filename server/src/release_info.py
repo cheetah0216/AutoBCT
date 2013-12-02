@@ -49,8 +49,9 @@ class CQRelease(object):
     self.cj=cookielib.CookieJar()
     self.cookie_support= urllib2.HTTPCookieProcessor(self.cj)
     self.opener = urllib2.build_opener(self.cookie_support, urllib2.HTTPHandler)
-    urllib2.install_opener(self.opener)
-    result = urllib2.urlopen(cq_url)
+    #urllib2.install_opener(self.opener)
+    #result = urllib2.urlopen(cq_url)
+    result = self.opener.open(cq_url)
     for index, cookie in enumerate(self.cj):
         #print index, cookie;
         self.cookies_jsessionid = cookie.value
