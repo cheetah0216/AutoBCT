@@ -1,6 +1,6 @@
 import web
 import time
-import prebuild
+from prebuild import Report
 
 urls = (
     '/path%(.*)', 'path',
@@ -13,8 +13,9 @@ class path:
 
 class report:
   def GET(self, release_id):
-    bulid = prebuild.report(release_id)
-    return release_id
+    bulid = Report(release_id)
+    preBuildLists = bulid.getPreBuildLists()
+    return preBuildLists
 
 if __name__ == "__main__":
   app = web.application(urls,globals())
