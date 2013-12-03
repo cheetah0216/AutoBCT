@@ -1,5 +1,7 @@
 import json
 import logging
+import urllib2
+from ntlm import HTTPNtlmAuthHandler
 
 from release_info import CQRelease
 
@@ -17,6 +19,23 @@ class Report(CQRelease):
   
   def _get_prebuild_report(self):
     self._get_prebuild_report_url(self.releaseInfo)
+
+    user = 'COMVERSE\\fliu'
+    password = 'null'
+    url =  self.prepBuildReportUrl.strip()
+    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+    passman.add_password(None, url, user, password)
+    # create the NTLM authentication handler
+    auth_NTLM = HTTPNtlmAuthHandler.HTTPNtlmAuthHandler(passman)
+    # create and install the opener
+    opener = urllib2.build_opener(auth_NTLM)
+    #urllib2.install_opener(opener)
+    # retrieve the result
+    #response = urllib2.urlopen(url)
+    #result = response.read()
+    result = opener.open(url).read()
+    print result
+
 
   def _get_prebuild_report_url(self, releaseInfo):
     self.releaseJson = json.loads(releaseInfo)
