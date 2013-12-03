@@ -14,7 +14,7 @@ class path:
 class report:
   def GET(self, release_id):
     bulid = Report(release_id)
-    preBuildLists = bulid.getPreBuildLists()
+    preBuildLists = bulid.CheckPreBuildLists()
     return preBuildLists
 
 if __name__ == "__main__":

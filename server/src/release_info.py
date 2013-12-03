@@ -43,6 +43,7 @@ class CQRelease(object):
     self._connect_relDB()
     self._set_preferrnce()
     self._get_resourse_id()
+    self._get_release_info()
 
   def _init_cookies(self, cq_url):
     self.logger.info("init cookies.")
@@ -57,6 +58,7 @@ class CQRelease(object):
         self.cookies_jsessionid = cookie.value
         #print self.cookies_jsessionid
     self.logger.info("get cookies_jessionid is %s", format(self.cookies_jsessionid))
+    #print result
 
   def _login_cq(self, cj):
     self.logger.info("login CQ.")
@@ -73,7 +75,8 @@ class CQRelease(object):
         data = postdata,
         headers = self.headers
     )
-    result = urllib2.urlopen(req).read()
+    #result = urllib2.urlopen(req).read()
+    result = self.opener.open(req).read()
     #print result
   
   def _connect_relDB(self):
@@ -88,7 +91,8 @@ class CQRelease(object):
         data = postdata,
         headers = self.headers
     )
-    result= urllib2.urlopen(req).read()
+    #result= urllib2.urlopen(req).read()
+    result= self.opener.open(req).read()
     for index, cookie in enumerate(self.cj):
       #print index, cookie;
       self.cookies_jsessionid = cookie.value
@@ -107,7 +111,8 @@ class CQRelease(object):
         data = postdata,
         headers = self.headers
     )
-    result = urllib2.urlopen(req).read()    
+    #result = urllib2.urlopen(req).read()    
+    result = self.opener.open(req).read()    
     for index, cookie in enumerate(self.cj):
       #print index, cookie;
       self.cookies_jsessionid = cookie.value
@@ -124,9 +129,29 @@ class CQRelease(object):
         'dojo.preventCache':'1373459717190'
     })
     request_url="http://10.8.33.110/cqweb/cqfind.cq?"+postdate
-    result = urllib2.urlopen(request_url).read()
+    #result = urllib2.urlopen(request_url).read()
+    result = self.opener.open(request_url).read()
     #print result
     strlen=len(result)
     self.resourceID=result[33:strlen-2]
     #print self.resourceID
     self.logger.info("get resource id is %s .", format(self.resourceID))
+
+  def _get_release_info(self):
+    postdate=urllib.urlencode({
+        'action':'GetCQRecordDetails',
+        'resourceId':self.resourceID,
+        'state':'VIEW',
+        'tabIndex':'0',
+        'acceptAllTabsData':'true',
+        'cquid':self.cookies_jsessionid,
+        'dojo.preventCache':'1373459723308'
+    })
+    request_url="http://10.8.33.110/cqweb/cqartifactdetails.cq?"+postdate
+    #print url
+    self.logger.info("get release info,request_url is %s",request_url)
+    self.releaseInfo = self.opener.open(request_url).read()
+    #print self.releaseInfo
+    #jsonInfo = json.loads(self.releaseInfo)
+    #print jsonInfo.keys()
+    #print jsonInfo['fields'][44]['CurrentValue'][26]

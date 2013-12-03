@@ -2,6 +2,7 @@ import urllib
 import urllib2
 import cookielib
 import json
+from time import gmtime, strftime, sleep
 from ntlm import HTTPNtlmAuthHandler
 
 
@@ -130,12 +131,12 @@ def get_release_detail_info(release_id):
     release=open('release.json','a')
     release.write(result)
     release.write('\n')
-    release.close
+    release.close()
 
 def get_preb_report_url():
     release_json = file('release.json')
     release = json.load(release_json)
-    #print release.keys()
+    print release.keys()
     #print release['fields'][44]['CurrentValue'][26]
     return release['fields'][44]['CurrentValue'][26]
 
@@ -159,10 +160,13 @@ def get_preb_report_info(prep_report_url):
     report.write(result)
     report.write('\n')
     report.close
-
-
+   
 if __name__ == '__main__':
+    print strftime("%Y-%m-%d-%H:%M:%S", gmtime())
     get_release_detail_info('RELDB00018711') 
+    print strftime("%Y-%m-%d-%H:%M:%S", gmtime())
     prep_report_url = get_preb_report_url()
+    print strftime("%Y-%m-%d-%H:%M:%S", gmtime())
     get_preb_report_info(prep_report_url)
-  
+    print strftime("%Y-%m-%d-%H:%M:%S", gmtime())
+
