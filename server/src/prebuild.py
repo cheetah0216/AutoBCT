@@ -2,26 +2,31 @@ import json
 import logging
 import urllib2
 from ntlm import HTTPNtlmAuthHandler
+from bs4 import BeautifulSoup
 
 from release_info import CQRelease
 
 class Report(CQRelease):
-  def __init__(self, release_id):
+  def __init__(self, release_id, checkInList):
     CQRelease.__init__(self, release_id)
+    self.viewCheckInList = checkInList
     self.prepBuildReportUrl = ''
+    self.prepBuildReportInfo = ''
+    self.srcCheckInList = []
+    self.checkInList = []
 
   def CheckPreBuildLists(self):
     self.logger.info("Start CheckPreBuildLists")
     self.getReleaseDetailInfo()
     self._get_prebuild_report()
-    #self._get_check_in_lists()
+    self._get_check_in_lists(self.prepBuildReportInfo)
     #self._is_prebulid_approved()
   
   def _get_prebuild_report(self):
     self._get_prebuild_report_url(self.releaseInfo)
 
     user = 'COMVERSE\\fliu'
-    password = 'null'
+    password = 'Zxh0329lf'
     url =  self.prepBuildReportUrl.strip()
     passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
     passman.add_password(None, url, user, password)
@@ -33,9 +38,7 @@ class Report(CQRelease):
     # retrieve the result
     #response = urllib2.urlopen(url)
     #result = response.read()
-    result = opener.open(url).read()
-    print result
-
+    self.prepBuildReportInfo = opener.open(url).read()
 
   def _get_prebuild_report_url(self, releaseInfo):
     self.releaseJson = json.loads(releaseInfo)
@@ -57,3 +60,31 @@ class Report(CQRelease):
       self.logger.error("prebuid report url is null") 
     else:
       self.logger.info("get prebuid report url is %s",self.prepBuildReportUrl)
+
+  def _get_check_in_lists(self, reportHTML):
+    self._prep_prepbuild_report(reportHTML)
+    index = 4;
+    while index < len(self.srcCheckInList):
+      if self.srcCheckInList[index] != self.srcCheckInList[5]:
+        checkInDic = dict(
+            filepath=self.srcCheckInList[index-1].strip().replace('\\','/'),
+            version=self.srcCheckInList[index].strip(),
+            comment=self.srcCheckInList[index+1].strip()
+            )
+        self.checkInList.append(checkInDic)
+      index = index + 3
+
+  def _prep_prepbuild_report(self, reportHTML):
+    reportHTML = reportHTML.replace("<br>", "")
+    soup = BeautifulSoup(reportHTML)
+    for tr in soup.table:
+      tmp = tr
+      break
+    for tr in soup.table:
+      if tr != tmp:
+        for td in tr:
+          tmp = td
+          break
+        for td in tr:
+          if td != tmp:
+            self.srcCheckInList.append(td.string)

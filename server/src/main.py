@@ -1,6 +1,8 @@
 import web
 import time
+
 from prebuild import Report
+from protocol import Protocol
 
 urls = (
     '/path%(.*)', 'path',
@@ -8,14 +10,19 @@ urls = (
     )
 
 class path:
-  def GET(self, release_id):
-    return release_id
+  def GET(self, request_info):
+    return request_info
 
 class report:
-  def GET(self, release_id):
-    bulid = Report(release_id)
-    preBuildLists = bulid.CheckPreBuildLists()
-    return preBuildLists
+  def GET(self, request_info):
+    pro = Protocol(request_info)
+    pro.ParseReportRequestInfo()
+
+    build = Report(pro.releaseID, pro.checkInList)
+    preBuildLists = build.CheckPreBuildLists()
+    print build.viewCheckInList
+    print build.checkInList
+    return request_info
 
 if __name__ == "__main__":
   app = web.application(urls,globals())
