@@ -26,7 +26,7 @@ class Report(CQRelease):
     self._get_prebuild_report_url(self.releaseInfo)
 
     user = 'COMVERSE\\fliu'
-    password = 'Zxh0329lf'
+    password = 'lf'
     url =  self.prepBuildReportUrl.strip()
     passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
     passman.add_password(None, url, user, password)
