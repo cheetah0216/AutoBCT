@@ -16,3 +16,6 @@ class Protocol:
           comment=fileinfo[2]
           )
       self.checkInList.append(checkInDic)
+
+  def ParsePathRequestInfo(self):
+     self.releaseID = self.requestInfo
