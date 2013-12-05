@@ -20,9 +20,7 @@ class report:
 
     build = Report(pro.releaseID, pro.checkInList)
     preBuildLists = build.CheckPreBuildLists()
-    print build.viewCheckInList
-    print build.checkInList
-    return request_info
+    return build.isApproved
 
 if __name__ == "__main__":
   app = web.application(urls,globals())

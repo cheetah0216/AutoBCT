@@ -14,14 +14,15 @@ class Report(CQRelease):
     self.prepBuildReportInfo = ''
     self.srcCheckInList = []
     self.checkInList = []
+    self.isApproved = 'true'
 
   def CheckPreBuildLists(self):
     self.logger.info("Start CheckPreBuildLists")
     self.getReleaseDetailInfo()
     self._get_prebuild_report()
     self._get_check_in_lists(self.prepBuildReportInfo)
-    #self._is_prebulid_approved()
-  
+    self._is_prebulid_approved()
+     
   def _get_prebuild_report(self):
     self._get_prebuild_report_url(self.releaseInfo)
 
@@ -88,3 +89,30 @@ class Report(CQRelease):
         for td in tr:
           if td != tmp:
             self.srcCheckInList.append(td.string)
+ 
+  def _is_prebulid_approved(self):
+    self.isApproved = 'true'
+    for viewFileInfo in self.viewCheckInList:
+      flag = self._is_file_in_checkin_list(viewFileInfo)
+      if flag == 'false':
+        self.isApproved = 'false'
+        self.logger.error("%s:%s/%s is not in check in lists.",\
+            viewFileInfo['comment'],\
+            viewFileInfo['filepath'],\
+            viewFileInfo['version'],\
+            )
+    self.logger.info("isApproved: %s", self.isApproved)
+    return self.isApproved
+
+  def _is_file_in_checkin_list(self,viewFileInfo):
+    flag = 'false'
+    for fileInfo in self.checkInList:
+      if viewFileInfo['filepath'] in fileInfo['filepath'] and \
+          viewFileInfo['version'] == fileInfo['version'] and \
+          viewFileInfo['comment'] in fileInfo['comment']:
+        flag = 'true'
+        break
+    return flag
+
+
+
