@@ -16,8 +16,8 @@ class path:
     pro.ParsePathRequestInfo()
 
     path = Path(pro.releaseID)
-    path.getPackageName()
-    return path.componentName
+    path.getPackagePath()
+    return path.packageFullName
 
 class report:
   def GET(self, request_info):
