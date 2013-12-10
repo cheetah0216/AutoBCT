@@ -113,6 +113,3 @@ class Report(CQRelease):
         flag = 'true'
         break
     return flag
-
-
-

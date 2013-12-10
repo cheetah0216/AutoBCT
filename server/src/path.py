@@ -33,11 +33,9 @@ class Path(CQRelease):
       self.logger.info('Start get %s package full path.', componentName)
       self.funcDict[componentName]()
 
-  def _get_RBB_package_path(self):
+  def _get_package_path_base(self,packagePath,packageName):
     for item in self.releaseJson['fields']:
       lineNum = 0
-      packagePath = '/proj/CBS/DIT/'
-      packageName = 'RATING_BILLING_BACKEND'
       if item['FieldName'] == 'Notes_Log':
         for noteLog in item['CurrentValue']:
           lineNum = lineNum + 1
@@ -47,12 +45,26 @@ class Path(CQRelease):
               #print name
               if packageName in name:
                 self.packageFullName = noteLog.strip() + '/' + name.split(' ')[-1].strip().replace('*','')
-                self.logger.info('get RBB package full path is: %s', self.packageFullName)
                 break
             break
         break
+
+  def _get_RBB_package_path(self):
+    packagePath = '/proj/CBS/DIT/'
+    packageName = 'RATING_BILLING_BACKEND'
+    self._get_package_path_base(packagePath, packageName)
+
     if self.packageFullName == '':
       self.logger.error('Can not get RBB package full path')
+    else:
+      self.logger.info('get RBB package full path is: %s', self.packageFullName)
 
   def _get_KID_package_path(self):
-    return 
+    packagePath = '/proj/CBS/DIT/'
+    packageName = 'KID'
+    self._get_package_path_base(packagePath, packageName)
+
+    if self.packageFullName == '':
+      self.logger.error('Can not get KID package full path')
+    else:
+      self.logger.info('get KID package full path is: %s', self.packageFullName)
