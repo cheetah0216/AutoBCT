@@ -3,7 +3,7 @@ from release_info import CQRelease
 
 class Path(CQRelease):
   def __init__(self, release_id):
-    CQRelease.__init__(self, release_id)
+    CQRelease.__init__(self, release_id, 'Path')
     self.funcDict = {
         'Rating Billing Backend AIX':self._get_RBB_package_path,
         'KID':self._get_KID_package_path

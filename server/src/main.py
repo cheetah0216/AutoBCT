@@ -16,6 +16,7 @@ class path:
     pro.ParsePathRequestInfo()
 
     path = Path(pro.releaseID)
+    print path.getLogFullPath()
     path.getPackagePath()
     return path.packageFullName
 
@@ -25,6 +26,7 @@ class report:
     pro.ParseReportRequestInfo()
 
     build = Report(pro.releaseID, pro.checkInList)
+    print build.getLogFullPath()
     build.CheckPreBuildLists()
     return build.isApproved
 

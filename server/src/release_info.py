@@ -8,8 +8,9 @@ from time import gmtime, strftime, sleep
 from ntlm import HTTPNtlmAuthHandler
 
 class CQRelease(object):
-  def __init__(self, release_id):
+  def __init__(self, release_id, logType):
     self.release_id = release_id
+    self.log_type = logType
     self._create_log_file(self.release_id)
     self._init_logger()
     self._init_http_info()
@@ -18,7 +19,7 @@ class CQRelease(object):
     if not os.path.exists('/opt/AutoBCT'):
         os.makedirs('/opt/AutoBCT')
     sysTime = strftime("%Y-%m-%d-%H%M%S_", gmtime())
-    self.logPath = "/opt/AutoBCT/PreBuild_" + sysTime + format(release_id)
+    self.logPath = "/opt/AutoBCT/" + self.log_type + "_" + sysTime + format(release_id)
     open(self.logPath,'a+').close()
 
   def _init_logger(self):   
@@ -35,6 +36,8 @@ class CQRelease(object):
     self.headers = {
             'User-Agent':'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31 AlexaToolbar/alxg-3.1'
     }
+  def getLogFullPath(self):
+    return self.logPath
 
   def getReleaseDetailInfo(self):
     cq_url = 'http://10.8.33.110/cqweb/'

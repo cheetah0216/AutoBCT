@@ -8,7 +8,7 @@ from release_info import CQRelease
 
 class Report(CQRelease):
   def __init__(self, release_id, checkInList):
-    CQRelease.__init__(self, release_id)
+    CQRelease.__init__(self, release_id,'Prebuild')
     self.viewCheckInList = checkInList
     self.prepBuildReportUrl = ''
     self.prepBuildReportInfo = ''
